@@ -143,6 +143,9 @@ export async function runSandboxedTask(
         }
 
         finalCode = attemptCode;
+        console.log(`\n[sandbox] --- Executing Python Code ---`);
+        console.log(attemptCode);
+        console.log(`[sandbox] -----------------------------\n`);
         const { stdout, stderr, exitCode } = await runScript(attemptCode);
 
         attempts.push({ attemptNumber: attemptNum, source, code: attemptCode, stdout, stderr, exitCode });
