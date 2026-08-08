@@ -54,7 +54,10 @@ export async function generateCandidateCode(objective: string, inputData?: strin
 
 const SANDBOX_TIMEOUT_MS = 20000; // 20s
 
-async function runScript(code: string): Promise<{ stdout: string; stderr: string; exitCode: number }> {
+// Exported so agent.ts's local-execution path (unconstrained requester) can
+// run generated code through the exact same executor the provider uses,
+// instead of a separate mechanism.
+export async function runScript(code: string): Promise<{ stdout: string; stderr: string; exitCode: number }> {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'overflow-'));
     const scriptPath = path.join(tempDir, 'script.py');
     fs.writeFileSync(scriptPath, code);
