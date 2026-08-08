@@ -246,13 +246,22 @@ async function main() {
                 pendingTasks.set(requestId, { resolve, reject });
             });
 
-            // 60s timeout
+            // Timeout budget. Measured directly (not guessed): a single
+            // generateCandidateCode() call for the RCA objective (229-line
+            // log, multi-field extraction) took 29-38s on Claude across 4
+            // real runs — Gemini handled the same objective in ~7s total, so
+            // this is provider-dependent, not objective-dependent alone. Up
+            // to 2 self-correction rounds can occur server-side if the
+            // requester-original code fails (each is its own full LLM call
+            // at the same latency), so worst case is ~3x a single call. 180s
+            // gives ~1.5x headroom over that worst case while still being a
+            // bounded wait for a live demo.
             setTimeout(() => {
                 if (pendingTasks.has(requestId)) {
                     pendingTasks.get(requestId)!.reject(new Error('Task timeout'));
                     pendingTasks.delete(requestId);
                 }
-            }, 60000);
+            }, 180000);
 
             await client.send(targetPeer, {
                 type: 'task_request',
