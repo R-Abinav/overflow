@@ -1,0 +1,229 @@
+2026-08-08T03:40:00.000Z INFO  [auth-service] [AuthHandler] login_success user=m.owusu src_ip=10.20.4.12 session_id=334053
+2026-08-08T03:40:10.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=7
+2026-08-08T03:40:19.000Z INFO  [auth-service] [AuthHandler] login_success user=j.rodriguez src_ip=10.20.4.11 session_id=329258
+2026-08-08T03:40:30.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=7
+2026-08-08T03:40:41.000Z INFO  [auth-service] [AuthHandler] login_success user=a.petrova src_ip=10.20.5.202 session_id=391704
+2026-08-08T03:40:49.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=5
+2026-08-08T03:41:01.000Z INFO  [auth-service] [AuthHandler] login_success user=m.owusu src_ip=10.20.4.11 session_id=197251
+2026-08-08T03:41:15.000Z INFO  [auth-service] [AuthHandler] login_success user=m.owusu src_ip=10.20.5.202 session_id=377370
+2026-08-08T03:41:23.000Z INFO  [auth-service] [AuthHandler] login_success user=a.petrova src_ip=10.20.4.11 session_id=678856
+2026-08-08T03:41:35.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=13 idle=37 utilization=26%
+2026-08-08T03:41:48.000Z INFO  [auth-service] [AuthHandler] login_success user=j.rodriguez src_ip=10.20.4.11 session_id=793384
+2026-08-08T03:41:59.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=15 idle=35 utilization=30%
+2026-08-08T03:42:10.000Z INFO  [auth-service] [AuthHandler] login_success user=a.petrova src_ip=10.20.4.34 session_id=270555
+2026-08-08T03:42:23.000Z INFO  [auth-service] [AuthHandler] login_success user=m.owusu src_ip=10.20.4.11 session_id=738720
+2026-08-08T03:42:41.000Z INFO  [auth-service] [AuthHandler] login_success user=k.tanaka src_ip=10.20.4.12 session_id=584714
+2026-08-08T03:42:55.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=12 idle=38 utilization=24%
+2026-08-08T03:43:13.000Z INFO  [auth-service] [AuthHandler] login_success user=m.owusu src_ip=10.20.4.11 session_id=340174
+2026-08-08T03:43:21.000Z INFO  [auth-service] [AuthHandler] login_success user=j.rodriguez src_ip=10.20.4.12 session_id=694731
+2026-08-08T03:43:34.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=6
+2026-08-08T03:43:52.000Z INFO  [auth-service] [AuthHandler] login_success user=k.tanaka src_ip=10.20.4.12 session_id=881177
+2026-08-08T03:44:00.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing src_ip=192.0.2.190 reason=invalid_credentials attempt=1
+2026-08-08T03:44:10.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.87 reason=invalid_credentials attempt=1
+2026-08-08T03:44:19.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.156 reason=invalid_credentials attempt=2
+2026-08-08T03:44:30.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=12
+2026-08-08T03:44:40.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=22 idle=28 utilization=44%
+2026-08-08T03:44:48.000Z INFO  [auth-service] [AuthHandler] login_success user=r.singh src_ip=10.20.5.202 session_id=887352
+2026-08-08T03:44:57.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=198.51.100.9 reason=invalid_credentials attempt=3
+2026-08-08T03:45:04.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=28 idle=22 utilization=56%
+2026-08-08T03:45:13.000Z INFO  [auth-service] [AuthHandler] login_success user=s.chen src_ip=10.20.4.11 session_id=755674
+2026-08-08T03:45:22.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing src_ip=198.51.100.23 reason=invalid_credentials attempt=2
+2026-08-08T03:45:32.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=13
+2026-08-08T03:45:40.000Z WARN  [auth-service] [AuthHandler] login_failed user=test src_ip=198.51.100.201 reason=invalid_credentials attempt=1
+2026-08-08T03:45:46.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=35 idle=15 utilization=70%
+2026-08-08T03:45:52.000Z INFO  [auth-service] [AuthHandler] login_success user=j.rodriguez src_ip=10.20.5.202 session_id=903035
+2026-08-08T03:45:59.000Z INFO  [auth-service] [AuthHandler] login_success user=s.chen src_ip=10.20.4.12 session_id=377932
+2026-08-08T03:46:09.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=192.0.2.45 reason=invalid_credentials attempt=4
+2026-08-08T03:46:17.000Z INFO  [auth-service] [AuthHandler] login_success user=a.petrova src_ip=10.20.5.202 session_id=573417
+2026-08-08T03:46:22.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=198.51.100.201 reason=invalid_credentials attempt=5
+2026-08-08T03:46:27.000Z INFO  [auth-service] [AuthHandler] login_success user=j.rodriguez src_ip=10.20.4.12 session_id=170674
+2026-08-08T03:46:32.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing src_ip=198.51.100.201 reason=invalid_credentials attempt=3
+2026-08-08T03:46:41.000Z INFO  [auth-service] [AuthHandler] login_success user=s.chen src_ip=10.20.5.202 session_id=595631
+2026-08-08T03:46:46.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=48 idle=2 utilization=96%
+2026-08-08T03:46:51.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing src_ip=203.0.113.156 reason=invalid_credentials attempt=4
+2026-08-08T03:46:58.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.14 reason=invalid_credentials attempt=6
+2026-08-08T03:47:05.000Z WARN  [auth-service] [AuthHandler] login_failed user=administrator src_ip=198.51.100.201 reason=invalid_credentials attempt=1
+2026-08-08T03:47:10.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing src_ip=198.51.100.9 reason=invalid_credentials attempt=5
+2026-08-08T03:47:15.000Z WARN  [auth-service] [AuthHandler] login_failed user=svc-billing-ro src_ip=203.0.113.87 reason=invalid_credentials attempt=1
+2026-08-08T03:47:19.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=4
+2026-08-08T03:47:23.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.156 reason=invalid_credentials attempt=7
+2026-08-08T03:47:26.000Z WARN  [auth-service] [AuthHandler] login_failed user=test src_ip=198.51.100.9 reason=invalid_credentials attempt=2
+2026-08-08T03:47:31.000Z INFO  [auth-service] [AuthHandler] login_success user=r.singh src_ip=10.20.5.202 session_id=794022
+2026-08-08T03:47:37.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.14 reason=invalid_credentials attempt=8
+2026-08-08T03:47:42.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.14 reason=invalid_credentials attempt=9
+2026-08-08T03:47:49.000Z INFO  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100%
+2026-08-08T03:47:52.000Z WARN  [auth-service] [AuthHandler] login_failed user=backup-svc src_ip=203.0.113.87 reason=invalid_credentials attempt=1
+2026-08-08T03:47:59.000Z WARN  [auth-service] [AuthHandler] login_failed user=admin src_ip=203.0.113.156 reason=invalid_credentials attempt=10
+2026-08-08T03:48:00.000Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=144
+2026-08-08T03:48:06.733Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27242ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.4.34
+2026-08-08T03:48:11.056Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29088ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.4.11
+2026-08-08T03:48:14.606Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:48:17.963Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=229
+2026-08-08T03:48:22.124Z ERROR [auth-service] [SessionValidator] session_validate_failed user=r.singh src_ip=10.20.4.34 reason=upstream_pool_exhausted
+2026-08-08T03:48:27.950Z WARN  [auth-service] [GC] pause detected duration_ms=342 heap_utilization=70% cause=allocation_failure
+2026-08-08T03:48:33.056Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 24876ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.5.202
+2026-08-08T03:48:36.334Z WARN  [auth-service] [GC] pause detected duration_ms=338 heap_utilization=69% cause=allocation_failure
+2026-08-08T03:48:41.983Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:48:46.849Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27469ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.4.11
+2026-08-08T03:48:50.190Z WARN  [auth-service] [GC] pause detected duration_ms=360 heap_utilization=70% cause=allocation_failure
+2026-08-08T03:48:55.642Z WARN  [auth-service] [GC] pause detected duration_ms=351 heap_utilization=69% cause=allocation_failure
+2026-08-08T03:49:00.794Z ERROR [auth-service] [SessionValidator] session_validate_failed user=s.chen src_ip=10.20.5.202 reason=upstream_pool_exhausted
+2026-08-08T03:49:04.234Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 26987ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.4.34
+2026-08-08T03:49:07.932Z WARN  [auth-service] [GC] pause detected duration_ms=560 heap_utilization=73% cause=allocation_failure
+2026-08-08T03:49:13.827Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=119
+2026-08-08T03:49:17.712Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=130
+2026-08-08T03:49:21.737Z ERROR [auth-service] [SessionValidator] session_validate_failed user=m.owusu src_ip=10.20.5.201 reason=upstream_pool_exhausted
+2026-08-08T03:49:27.621Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29744ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.5.201
+2026-08-08T03:49:30.500Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27770ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.4.34
+2026-08-08T03:49:32.728Z WARN  [auth-service] [GC] pause detected duration_ms=504 heap_utilization=77% cause=allocation_failure
+2026-08-08T03:49:36.613Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=182
+2026-08-08T03:49:40.269Z WARN  [auth-service] [GC] pause detected duration_ms=522 heap_utilization=78% cause=allocation_failure
+2026-08-08T03:49:42.387Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 26174ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.4.11
+2026-08-08T03:49:46.831Z ERROR [auth-service] [SessionValidator] session_validate_failed user=m.owusu src_ip=10.20.5.201 reason=upstream_pool_exhausted
+2026-08-08T03:49:51.354Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28723ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.4.34
+2026-08-08T03:49:54.079Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28410ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.4.12
+2026-08-08T03:49:57.520Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=209
+2026-08-08T03:50:01.841Z ERROR [auth-service] [SessionValidator] session_validate_failed user=m.owusu src_ip=10.20.5.202 reason=upstream_pool_exhausted
+2026-08-08T03:50:05.523Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29711ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.5.202
+2026-08-08T03:50:07.719Z WARN  [auth-service] [GC] pause detected duration_ms=677 heap_utilization=81% cause=allocation_failure
+2026-08-08T03:50:11.897Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:50:14.208Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28751ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.4.34
+2026-08-08T03:50:17.660Z WARN  [auth-service] [GC] pause detected duration_ms=648 heap_utilization=83% cause=allocation_failure
+2026-08-08T03:50:21.833Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29438ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.5.202
+2026-08-08T03:50:24.928Z WARN  [auth-service] [GC] pause detected duration_ms=595 heap_utilization=81% cause=allocation_failure
+2026-08-08T03:50:26.953Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27892ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.4.11
+2026-08-08T03:50:30.377Z ERROR [auth-service] [SessionValidator] session_validate_failed user=a.petrova src_ip=10.20.5.201 reason=upstream_pool_exhausted
+2026-08-08T03:50:33.626Z WARN  [auth-service] [GC] pause detected duration_ms=757 heap_utilization=81% cause=allocation_failure
+2026-08-08T03:50:36.423Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29700ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.5.201
+2026-08-08T03:50:38.993Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=102
+2026-08-08T03:50:42.129Z WARN  [auth-service] [GC] pause detected duration_ms=738 heap_utilization=86% cause=allocation_failure
+2026-08-08T03:50:45.902Z WARN  [auth-service] [GC] pause detected duration_ms=704 heap_utilization=86% cause=allocation_failure
+2026-08-08T03:50:50.358Z ERROR [auth-service] [SessionValidator] session_validate_failed user=a.petrova src_ip=10.20.5.201 reason=upstream_pool_exhausted
+2026-08-08T03:50:53.127Z ERROR [auth-service] [SessionValidator] session_validate_failed user=m.owusu src_ip=10.20.5.202 reason=upstream_pool_exhausted
+2026-08-08T03:50:55.768Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 24634ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.4.34
+2026-08-08T03:50:57.046Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28424ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.4.12
+2026-08-08T03:50:58.282Z WARN  [auth-service] [GC] pause detected duration_ms=640 heap_utilization=85% cause=allocation_failure
+2026-08-08T03:51:00.699Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:51:02.762Z ERROR [auth-service] [SessionValidator] session_validate_failed user=a.petrova src_ip=10.20.5.202 reason=upstream_pool_exhausted
+2026-08-08T03:51:05.782Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:51:08.087Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=254
+2026-08-08T03:51:11.852Z WARN  [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=near_capacity
+2026-08-08T03:51:14.298Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 26753ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.5.201
+2026-08-08T03:51:17.467Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=53
+2026-08-08T03:51:20.073Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27511ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.5.201
+2026-08-08T03:51:21.124Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 25733ms (max_wait=30000ms) requester=session_validate user=a.petrova src_ip=10.20.4.34
+2026-08-08T03:51:23.903Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 27453ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.4.11
+2026-08-08T03:51:25.922Z INFO  [auth-service] [HealthCheck] GET /healthz 200 OK latency_ms=219
+2026-08-08T03:51:27.587Z ERROR [auth-service] [SessionValidator] session_validate_failed user=r.singh src_ip=10.20.4.11 reason=upstream_pool_exhausted
+2026-08-08T03:51:28.840Z ERROR [auth-service] [SessionValidator] session_validate_failed user=s.chen src_ip=10.20.4.12 reason=upstream_pool_exhausted
+2026-08-08T03:51:29.969Z WARN  [auth-service] [GC] pause detected duration_ms=754 heap_utilization=91% cause=allocation_failure
+2026-08-08T03:51:30.000Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28755ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=192.0.2.45
+2026-08-08T03:51:30.267Z WARN  [auth-service] [GC] pause detected duration_ms=918 heap_utilization=93% cause=allocation_failure
+2026-08-08T03:51:30.527Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=79
+2026-08-08T03:51:31.061Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29464ms (max_wait=30000ms) requester=session_validate user=a.petrova src_ip=10.20.4.12
+2026-08-08T03:51:31.459Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29582ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=192.0.2.190
+2026-08-08T03:51:31.732Z WARN  [auth-service] [GC] pause detected duration_ms=642 heap_utilization=96% cause=allocation_failure
+2026-08-08T03:51:32.237Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=87
+2026-08-08T03:51:32.457Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=83
+2026-08-08T03:51:32.619Z WARN  [auth-service] [GC] pause detected duration_ms=1101 heap_utilization=98% cause=allocation_failure
+2026-08-08T03:51:32.877Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28741ms (max_wait=30000ms) requester=session_validate user=svc-billing src_ip=203.0.113.156
+2026-08-08T03:51:33.183Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29502ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=192.0.2.45
+2026-08-08T03:51:33.828Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29691ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=203.0.113.14
+2026-08-08T03:51:34.229Z WARN  [auth-service] [GC] pause detected duration_ms=885 heap_utilization=92% cause=allocation_failure
+2026-08-08T03:51:34.840Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28951ms (max_wait=30000ms) requester=session_validate user=admin src_ip=203.0.113.14
+2026-08-08T03:51:35.019Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28665ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=198.51.100.23
+2026-08-08T03:51:35.386Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28529ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.5.202
+2026-08-08T03:51:35.818Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=106
+2026-08-08T03:51:36.163Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29474ms (max_wait=30000ms) requester=session_validate user=admin src_ip=198.51.100.23
+2026-08-08T03:51:36.559Z WARN  [auth-service] [GC] pause detected duration_ms=1328 heap_utilization=97% cause=allocation_failure
+2026-08-08T03:51:37.211Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28035ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.5.202
+2026-08-08T03:51:37.587Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28498ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=192.0.2.190
+2026-08-08T03:51:38.114Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29087ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=203.0.113.87
+2026-08-08T03:51:38.602Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28929ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.5.202
+2026-08-08T03:51:39.009Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29477ms (max_wait=30000ms) requester=session_validate user=a.petrova src_ip=203.0.113.14
+2026-08-08T03:51:39.281Z WARN  [auth-service] [GC] pause detected duration_ms=1306 heap_utilization=98% cause=allocation_failure
+2026-08-08T03:51:39.620Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29512ms (max_wait=30000ms) requester=session_validate user=svc-billing src_ip=10.20.5.202
+2026-08-08T03:51:40.307Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=52
+2026-08-08T03:51:40.655Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28739ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.5.202
+2026-08-08T03:51:40.819Z WARN  [auth-service] [GC] pause detected duration_ms=880 heap_utilization=93% cause=allocation_failure
+2026-08-08T03:51:41.015Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=150 max_queue_depth=100
+2026-08-08T03:51:41.464Z WARN  [auth-service] [GC] pause detected duration_ms=1253 heap_utilization=93% cause=allocation_failure
+2026-08-08T03:51:42.116Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28025ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=198.51.100.23
+2026-08-08T03:51:42.756Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28377ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.5.202
+2026-08-08T03:51:43.395Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28133ms (max_wait=30000ms) requester=session_validate user=admin src_ip=198.51.100.23
+2026-08-08T03:51:43.620Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=46
+2026-08-08T03:51:43.925Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29152ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.4.12
+2026-08-08T03:51:44.329Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29565ms (max_wait=30000ms) requester=session_validate user=admin src_ip=192.0.2.45
+2026-08-08T03:51:44.710Z WARN  [auth-service] [GC] pause detected duration_ms=1061 heap_utilization=95% cause=allocation_failure
+2026-08-08T03:51:45.313Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29205ms (max_wait=30000ms) requester=session_validate user=admin src_ip=10.20.5.202
+2026-08-08T03:51:45.524Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=52
+2026-08-08T03:51:45.886Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=73
+2026-08-08T03:51:46.119Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28355ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.4.34
+2026-08-08T03:51:46.271Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29411ms (max_wait=30000ms) requester=session_validate user=svc-billing src_ip=10.20.5.202
+2026-08-08T03:51:46.454Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29447ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=203.0.113.156
+2026-08-08T03:51:47.068Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28478ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=198.51.100.9
+2026-08-08T03:51:47.420Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29115ms (max_wait=30000ms) requester=session_validate user=a.petrova src_ip=192.0.2.190
+2026-08-08T03:51:47.722Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=98 max_queue_depth=100
+2026-08-08T03:51:47.945Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29623ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=192.0.2.45
+2026-08-08T03:51:48.390Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28959ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=203.0.113.156
+2026-08-08T03:51:48.952Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=144 max_queue_depth=100
+2026-08-08T03:51:49.607Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29224ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=203.0.113.87
+2026-08-08T03:51:50.087Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=43
+2026-08-08T03:51:50.330Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29380ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=198.51.100.9
+2026-08-08T03:51:50.755Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=62
+2026-08-08T03:51:51.386Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=96
+2026-08-08T03:51:51.820Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29198ms (max_wait=30000ms) requester=session_validate user=admin src_ip=192.0.2.190
+2026-08-08T03:51:52.473Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=140 max_queue_depth=100
+2026-08-08T03:51:52.979Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28657ms (max_wait=30000ms) requester=session_validate user=k.tanaka src_ip=10.20.4.34
+2026-08-08T03:51:53.466Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29014ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=192.0.2.190
+2026-08-08T03:51:54.026Z WARN  [auth-service] [GC] pause detected duration_ms=637 heap_utilization=96% cause=allocation_failure
+2026-08-08T03:51:54.641Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28516ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=10.20.4.12
+2026-08-08T03:51:55.204Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=80 max_queue_depth=100
+2026-08-08T03:51:55.827Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28384ms (max_wait=30000ms) requester=session_validate user=r.singh src_ip=192.0.2.45
+2026-08-08T03:51:56.487Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=46
+2026-08-08T03:51:56.845Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28268ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=198.51.100.23
+2026-08-08T03:51:57.491Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29993ms (max_wait=30000ms) requester=session_validate user=a.petrova src_ip=203.0.113.156
+2026-08-08T03:51:57.803Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28028ms (max_wait=30000ms) requester=session_validate user=admin src_ip=10.20.4.12
+2026-08-08T03:51:58.183Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=94 max_queue_depth=100
+2026-08-08T03:51:58.805Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=99 max_queue_depth=100
+2026-08-08T03:51:59.465Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=117 max_queue_depth=100
+2026-08-08T03:52:00.136Z WARN  [auth-service] [GC] pause detected duration_ms=1094 heap_utilization=95% cause=allocation_failure
+2026-08-08T03:52:00.769Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29128ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=203.0.113.87
+2026-08-08T03:52:01.114Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=145 max_queue_depth=100
+2026-08-08T03:52:01.403Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=115 max_queue_depth=100
+2026-08-08T03:52:01.977Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29613ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=10.20.4.11
+2026-08-08T03:52:02.416Z WARN  [auth-service] [GC] pause detected duration_ms=1201 heap_utilization=98% cause=allocation_failure
+2026-08-08T03:52:03.067Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=137 max_queue_depth=100
+2026-08-08T03:52:03.712Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29130ms (max_wait=30000ms) requester=session_validate user=admin src_ip=198.51.100.23
+2026-08-08T03:52:04.191Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=110 max_queue_depth=100
+2026-08-08T03:52:04.733Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29588ms (max_wait=30000ms) requester=session_validate user=admin src_ip=10.20.4.11
+2026-08-08T03:52:05.208Z WARN  [auth-service] [GC] pause detected duration_ms=990 heap_utilization=97% cause=allocation_failure
+2026-08-08T03:52:05.753Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=99 max_queue_depth=100
+2026-08-08T03:52:06.410Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=96 max_queue_depth=100
+2026-08-08T03:52:07.074Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=122 max_queue_depth=100
+2026-08-08T03:52:07.326Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=136 max_queue_depth=100
+2026-08-08T03:52:07.578Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=98
+2026-08-08T03:52:07.743Z WARN  [auth-service] [GC] pause detected duration_ms=1270 heap_utilization=95% cause=allocation_failure
+2026-08-08T03:52:08.051Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29600ms (max_wait=30000ms) requester=session_validate user=s.chen src_ip=203.0.113.14
+2026-08-08T03:52:08.608Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=82
+2026-08-08T03:52:09.304Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28648ms (max_wait=30000ms) requester=session_validate user=svc-billing src_ip=198.51.100.201
+2026-08-08T03:52:09.490Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=70
+2026-08-08T03:52:09.934Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=91 max_queue_depth=100
+2026-08-08T03:52:10.528Z ERROR [auth-service] [RequestQueue] request rejected reason=queue_full queue_depth=92 max_queue_depth=100
+2026-08-08T03:52:11.132Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28613ms (max_wait=30000ms) requester=session_validate user=j.rodriguez src_ip=10.20.4.11
+2026-08-08T03:52:11.614Z WARN  [auth-service] [GC] pause detected duration_ms=967 heap_utilization=94% cause=allocation_failure
+2026-08-08T03:52:12.147Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28500ms (max_wait=30000ms) requester=session_validate user=admin src_ip=192.0.2.45
+2026-08-08T03:52:12.481Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 28161ms (max_wait=30000ms) requester=session_validate user=admin src_ip=192.0.2.45
+2026-08-08T03:52:12.877Z ERROR [auth-service] [ConnectionPool] timeout acquiring connection from pool after 29194ms (max_wait=30000ms) requester=session_validate user=m.owusu src_ip=10.20.5.201
+2026-08-08T03:52:13.499Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=98
+2026-08-08T03:52:13.910Z ERROR [auth-service] [ConnectionPool] pool_size=50 active=50 idle=0 utilization=100% status=EXHAUSTED queue_depth=99
+2026-08-08T03:52:14.000Z FATAL [auth-service] [ConnectionPool] OutOfMemoryError: unable to allocate connection wrapper — heap exhausted (heap_utilization=99%, active=50/50, queue_depth=142)
+2026-08-08T03:52:14.180Z FATAL [auth-service] [Runtime] java.lang.OutOfMemoryError: Java heap space
+2026-08-08T03:52:14.210Z FATAL [auth-service] [Runtime] 	at com.acme.auth.pool.ConnectionWrapper.<init>(ConnectionWrapper.java:41)
+2026-08-08T03:52:14.215Z FATAL [auth-service] [Runtime] 	at com.acme.auth.pool.ConnectionPool.acquire(ConnectionPool.java:118)
+2026-08-08T03:52:14.220Z FATAL [auth-service] [Runtime] 	at com.acme.auth.session.SessionValidator.validate(SessionValidator.java:76)
+2026-08-08T03:52:14.890Z FATAL [auth-service] [ProcessManager] auth-service (pid=18422) terminated unexpectedly, exit_code=1
+2026-08-08T03:52:17.100Z INFO  [auth-service] [ProcessManager] restarting auth-service (attempt 1/5, backoff=3s)
+2026-08-08T03:52:20.250Z INFO  [auth-service] [ProcessManager] auth-service (pid=18590) started
+2026-08-08T03:52:20.980Z INFO  [auth-service] [ConnectionPool] pool initialized pool_size=50 active=0 idle=50 utilization=0%
+2026-08-08T03:52:21.100Z INFO  [auth-service] [auth-service] ready to accept connections
