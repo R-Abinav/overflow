@@ -81,6 +81,65 @@ async function generateFixedFile(diagnosis: string, currentContent: string): Pro
     return extractPythonFile(rawResponse);
 }
 
+// Halts the pipeline loudly the moment a step's output can't be trusted,
+// instead of letting a failed/malformed step cascade into a real branch/PR.
+// The bug this exists for: /delegate's own timeout resolves normally with
+// { "error": "Task timeout" } rather than rejecting — runDelegationFlow()
+// falls back to JSON.stringify(data) for that shape, so a failed diagnosis
+// looks like an ordinary (if odd) string to any caller that doesn't check.
+class PipelineValidationError extends Error {
+    constructor(step: string, reason: string) {
+        super(`PIPELINE HALTED at step "${step}": ${reason}`);
+        this.name = 'PipelineValidationError';
+    }
+}
+
+function looksLikeErrorResponse(text: string): boolean {
+    const trimmed = text.trim();
+    if (/^\{\s*"error"\s*:/.test(trimmed)) return true;
+    try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === 'object' && 'error' in parsed) return true;
+    } catch {
+        // Not JSON — fine, not this failure mode.
+    }
+    return false;
+}
+
+function validateDiagnosis(diagnosis: string): void {
+    if (!diagnosis || diagnosis.trim().length === 0) {
+        throw new PipelineValidationError('diagnosis', 'empty output from the delegation pipeline');
+    }
+    if (looksLikeErrorResponse(diagnosis)) {
+        throw new PipelineValidationError('diagnosis', `delegation pipeline returned an error instead of a diagnosis: ${diagnosis.slice(0, 200)}`);
+    }
+    const requiredMarkers = ['TRIGGER:', 'CASCADE:', 'ROOT CAUSE:'];
+    const missing = requiredMarkers.filter(m => !diagnosis.includes(m));
+    if (missing.length > 0) {
+        throw new PipelineValidationError('diagnosis', `missing required section(s) [${missing.join(', ')}] — does not match the RCA_OBJECTIVE's required structure, likely malformed or an error passthrough: ${diagnosis.slice(0, 300)}`);
+    }
+    // The objective requires the exhaustion timestamp to be cited verbatim —
+    // a real diagnosis always contains a real ISO timestamp somewhere.
+    if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(diagnosis)) {
+        throw new PipelineValidationError('diagnosis', `no ISO-8601 timestamp found anywhere in the diagnosis — expected a real timestamp cited from the log: ${diagnosis.slice(0, 300)}`);
+    }
+}
+
+function validateFixedFile(fixedContent: string, currentContent: string): void {
+    if (!fixedContent || fixedContent.trim().length === 0) {
+        throw new PipelineValidationError('grounded-fix', 'empty fixed file content returned');
+    }
+    if (looksLikeErrorResponse(fixedContent)) {
+        throw new PipelineValidationError('grounded-fix', `LLM call returned an error instead of file content: ${fixedContent.slice(0, 200)}`);
+    }
+    if (fixedContent.trim() === currentContent.trim()) {
+        throw new PipelineValidationError('grounded-fix', 'fixed file is byte-identical to the current file — no fix was actually produced');
+    }
+    if (!fixedContent.includes('class ConnectionPool') && !fixedContent.includes('def ')) {
+        throw new PipelineValidationError('grounded-fix', `fixed file doesn't look like valid Python (no class/def found): ${fixedContent.slice(0, 300)}`);
+    }
+}
+
 function extractRootCause(diagnosis: string): string {
     const match = diagnosis.match(/ROOT CAUSE:\s*(.+)/);
     return match?.[1]?.trim() ?? 'address connection pool exhaustion incident';
@@ -115,6 +174,9 @@ async function main() {
     console.log('\n=== RCA DIAGNOSIS ===');
     console.log(result.output);
 
+    validateDiagnosis(result.output);
+    console.log('[rca-agent] Diagnosis validated (not an error passthrough, has TRIGGER/CASCADE/ROOT CAUSE, cites a real timestamp) — proceeding.');
+
     const containerName = result.raw?.containerName;
     console.log(`\n[rca-agent] ranLocally=${result.ranLocally} sandbox executed on: ${containerName ?? '(local — no remote container involved)'}`);
 
@@ -137,6 +199,9 @@ async function main() {
     console.log('[rca-agent] Generating grounded fix (third LLM call, given real file content)...');
     const fixedContent = await generateFixedFile(result.output, currentContent);
 
+    validateFixedFile(fixedContent, currentContent);
+    console.log('[rca-agent] Grounded fix validated (not an error passthrough, differs from current file, looks like real Python) — proceeding.');
+
     const realDiff = createTwoFilesPatch(TARGET_FILE, TARGET_FILE, currentContent, fixedContent, '', '');
     fs.writeFileSync(PATCH_PATH, realDiff);
     console.log(`[rca-agent] Real (mechanically computed) diff written to ${PATCH_PATH}`);
@@ -156,4 +221,7 @@ async function main() {
     console.log(`\n[rca-agent] PR opened: ${pr.url}`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
