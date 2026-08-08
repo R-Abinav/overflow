@@ -174,37 +174,6 @@ The default demo topology is Docker Compose on one machine (`overflow-provider` 
 
 ---
 
-## Judge Q&A
-
-**"Isn't this just calling Claude on a different machine — why does that need P2P/mesh/escrow at all?"**
-The point isn't routing a call to a bigger server — the *execution environment* (CPU, RAM, a place to actually run and observe code) has to be local to wherever the task runs, and that environment is supplied by an untrusted peer with its own economic incentives, not a service you have an account with. The mesh and staking exist because "peer" implies no pre-existing trust relationship.
-
-**"How is this different from just running Claude Code / Code Interpreter locally?"**
-Those assume an account, credentials, and a cloud connection configured in advance. The premise here is an edge agent with none of that pre-arranged, recovering autonomously at the moment it hits a constraint, by finding whichever peer happens to be reachable on the mesh right now.
-
-**"What stops a malicious peer from returning a fake success?"**
-See [Security model](#security-model--stated-honestly) — nothing beyond exit code today, stated plainly rather than overclaimed.
-
-**"Why Python and not the requester's own language/runtime?"**
-Clearest, most legible failure/fix demo — errors are short and readable, and the stdlib is broad enough that "no third-party packages" still leaves genuinely solvable tasks. The protocol itself is language-agnostic (`language` is a message-schema field); Python is the concrete choice for this build, not a hard constraint.
-
-**"What's actually novel here vs. just prompting an LLM to write and run code, which already exists elsewhere?"**
-The loop itself isn't the novel part — it's that it's triggered *autonomously* by a resource-constrained agent's own failure, delegated over an *untrusted, permissionless peer network*, with the beginnings of an economic settlement layer underneath, no human in the loop after the agent starts. Take away the P2P/constraint-triggered/economic pieces and this is Code Interpreter; keep them, and it's a decentralized execution substrate other agents could depend on.
-
----
-
-## Judging criteria — explicit mapping
-
-| Criterion | How Overflow answers it |
-|---|---|
-| Problem Authenticity | Autonomous recovery from resource constraints without human/cloud pre-setup — extended from "can't run inference" (Edgent) to "can't run the right code at all" |
-| AI Depth & Nativeness | The central capability (writing correct code for an unknown task, reading a real failure, fixing it) can't be done by a smaller/dumber model — Claude is load-bearing, not decorative |
-| Solution Effectiveness | One complete pipeline (constrained → delegate → sandbox → self-correct → return), tested end-to-end across a real objective matrix on both Gemini and Claude, not a partial multi-feature build |
-| Technical Depth & Ingenuity | Reused a working P2P protocol correctly, deliberately descoped what didn't serve the new claim (ZK/KeeperHub), made a specific defensible design call (stdlib-only sandbox) to keep the demo honest, and found/fixed real bugs (mocked execution, fabricated-PR cascade) via actual adversarial testing rather than assuming success |
-| Innovation & Craft | Shift from "delegate an inference call" to "delegate a task with real execution and real failure recovery" — a different capability, not a UI skin on the same one |
-
----
-
 ## Tech stack
 
 | Layer | Technology |

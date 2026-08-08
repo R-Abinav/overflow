@@ -8,7 +8,7 @@ All notable changes to Overflow. Built during Push to Prod (Aug 8, 2026). Entrie
 
 - `8ededa8` — Imported base from [Edgent](https://github.com/R-Abinav/edgent) (pre-existing work, ETHGlobal Open Agents 2026) as a single commit boundary. Everything after this commit was built during Push to Prod.
 
-### P0 — sandbox self-correction pipeline
+### sandbox self-correction pipeline
 
 - `aa90648` — Added the sandbox agent loop (`sandbox.ts`): LLM writes Python, executes via `child_process.execFile`, self-corrects on real stderr. Stripped the ZK proof (`integrity.ts`) and KeeperHub/x402 (`payment.ts`) calls out of the live message flow (files kept for disclosure, not deleted). Dockerized provider/requester roles, building the AXL binary from source instead of shipping the committed macOS binary.
 - `5aeb55e` — Fixed issues found in a full P0 audit (obsolete `docker-compose.yml` `version` key).
