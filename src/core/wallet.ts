@@ -9,17 +9,16 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { baseSepolia } from 'viem/chains';
 import { ENV } from '../config/env.config';
 
-// ── Validate private key at module load time ──────────────────────────────────
-// Fail fast with a clear message rather than a cryptic viem error later.
-const rawKey = ENV.WALLET_PRIVATE_KEY;
-if (!rawKey || rawKey === '') {
-    throw new Error('[wallet] WALLET_PRIVATE_KEY is not set. Add it to your .env file.');
+function getAccount() {
+    const rawKey = ENV.WALLET_PRIVATE_KEY;
+    if (!rawKey || rawKey === '') {
+        throw new Error('[wallet] WALLET_PRIVATE_KEY is not set. Add it to your .env file.');
+    }
+    if (!rawKey.startsWith('0x')) {
+        throw new Error('[wallet] WALLET_PRIVATE_KEY must start with 0x.');
+    }
+    return privateKeyToAccount(rawKey as `0x${string}`);
 }
-if (!rawKey.startsWith('0x')) {
-    throw new Error('[wallet] WALLET_PRIVATE_KEY must start with 0x.');
-}
-
-const account = privateKeyToAccount(rawKey as `0x${string}`);
 
 // ── Singleton clients ─────────────────────────────────────────────────────────
 // Created once, reused everywhere. No MetaMask. No human approval.
@@ -34,7 +33,7 @@ let _publicClient: PublicClient | null = null;
 export function getWalletClient(): WalletClient {
     if (!_walletClient) {
         _walletClient = createWalletClient({
-            account,
+            account: getAccount(),
             chain: baseSepolia,
             transport: http(ENV.BASE_SEPOLIA_RPC_URL),
         });
@@ -61,7 +60,7 @@ export function getPublicClient(): PublicClient {
  * Returns the wallet address derived from WALLET_PRIVATE_KEY.
  */
 export function getWalletAddress(): string {
-    return account.address;
+    return getAccount().address;
 }
 
 /**
@@ -70,6 +69,6 @@ export function getWalletAddress(): string {
  */
 export async function getBalance(address?: string): Promise<bigint> {
     const client = getPublicClient();
-    const target = (address ?? account.address) as `0x${string}`;
+    const target = (address ?? getAccount().address) as `0x${string}`;
     return client.getBalance({ address: target });
 }

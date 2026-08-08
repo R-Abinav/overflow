@@ -6,9 +6,9 @@ import path from 'path';
 
 import { randomUUID } from 'crypto';
 import { EventEmitter } from 'events';
-import { runInference } from './core/executor';
-import { generateZKProof, verifyZKProof, axlKeyToBigInts } from './core/integrity';
-import { notifyKeeperHub } from './core/payment';
+import { runSandboxedTask } from './core/sandbox';
+// integrity.ts (ZK) and payment.ts (KeeperHub/x402) imports removed — Step 2 strip
+// escrow.ts kept in place per spec; stakeForJob call gated behind P1 flag below
 import { stakeForJob, verifyStake } from './core/escrow';
 
 async function main() {
@@ -17,7 +17,7 @@ async function main() {
     const roleArg = args.find(a => a.startsWith('--role='));
     const role = roleArg ? roleArg.split('=')[1] : ENV.ROLE;
 
-    console.log(`[edgent] Starting Edgent daemon in '${role}' role...`);
+    console.log(`[overflow] Starting Overflow daemon in '${role}' role...`);
 
     //pick the right AXL config file and port based on role
     //using node-config-a (port 9002) for provider, node-config-b (port 9012) for requester
@@ -27,8 +27,8 @@ async function main() {
     //using 3001 for provider, 3002 for requester to avoid port conflicts during local testing
     const daemonPort = role === 'provider' ? 3001 : 3002;
 
-    console.log(`[edgent] Using config: ${configPath}`);
-    console.log(`[edgent] AXL API Port: ${apiPort}`);
+    console.log(`[overflow] Using config: ${configPath}`);
+    console.log(`[overflow] AXL API Port: ${apiPort}`);
 
     //spawn AXL
     const cleanupAXL = spawnAXL(configPath, apiPort);
@@ -41,30 +41,25 @@ async function main() {
         reject: (err: Error) => void;
     }>();
 
-    // Temporarily holds task output between task_result and payment_request messages
-    const pendingOutputs = new Map<string, string>(); // requestId → output
-
-    // Rolling log of last 10 completed/failed jobs — served by /jobs endpoint
+    // Rolling log of last 50 completed/failed jobs — served by /jobs endpoint
     const recentJobs: Array<{
         jobId: string;
         requestId: string;
         status: 'completed' | 'failed';
         durationMs: number;
-        txHash: string;
-        txLink: string;
         timestamp: number;
     }> = [];
 
     const routerEvents = new EventEmitter();
 
     //call waitReady() and log
-    console.log('[edgent] Waiting for AXL mesh to be ready...');
+    console.log('[overflow] Waiting for AXL mesh to be ready...');
     await client.waitReady();
-    console.log('[edgent] AXL is ready!');
+    console.log('[overflow] AXL is ready!');
 
     //log own public key
     const topology = await client.getTopology();
-    console.log(`[edgent] Node Public Key: ${topology.ourPublicKey}`);
+    console.log(`[overflow] Node Public Key: ${topology.ourPublicKey}`);
 
     //one-time startup advertisement
     const resources = await getResources();
@@ -79,208 +74,112 @@ async function main() {
                     resources
                 });
             }
-            console.log(`[edgent] Sent resource_ad to ${peers.length} peer(s)`);
+            console.log(`[overflow] Sent resource_ad to ${peers.length} peer(s)`);
         } catch (err) {
-            console.warn('[edgent] Could not send resource_ad (expected on localhost):', (err as Error).message);
+            console.warn('[overflow] Could not send resource_ad (expected on localhost):', (err as Error).message);
         }
     }
 
-    //loop 1: Message poll (every 500ms)
+    //loop: Message poll (every 500ms)
     const pollInterval = setInterval(async () => {
         try {
             const msg = await client.recv();
             if (msg) {
                 const data = msg.data as any;
-                console.log(`[edgent] Received message from ${msg.fromPeerId}: ${data.type || 'unknown'}`);
+                console.log(`[overflow] Received message from ${msg.fromPeerId}: ${data.type || 'unknown'}`);
 
                 // Message router
                 switch (data.type) {
                     case 'resource_request': {
-                        console.log(`[edgent] Received resource_request from ${msg.fromPeerId}`);
+                        console.log(`[overflow] Received resource_request from ${msg.fromPeerId}`);
                         const resourcesInfo = await getResources();
                         await client.send(msg.fromPeerId, {
                             type: 'resource_ad',
                             nodeId: topology.ourPublicKey,
-                            ensName: ENV.ENS_NAME || 'node.edgent.eth',
-                            walletAddress: ENV.WALLET_ADDRESS || '0x0000000000000000000000000000000000000000',
+                            ensName: ENV.ENS_NAME || 'node.overflow.eth',
                             timestamp: Date.now(),
                             resources: resourcesInfo,
-                            pricePerJob: { amount: ENV.PRICE_PER_JOB_USDC || '0.01', currency: 'USDC', chain: ENV.CHAIN || 'base-sepolia' }
                         });
                         break;
                     }
                     case 'resource_ad': {
-                        console.log(`[edgent] Received resource_ad from ${data.ensName || msg.fromPeerId}`);
-                        console.log(`[edgent]   RAM free: ${data.resources.freeRamMB}MB  Models: [${data.resources.availableModels.join(', ')}]  Price: ${data.pricePerJob?.amount || '0.01'} USDC`);
+                        console.log(`[overflow] Received resource_ad from ${data.ensName || msg.fromPeerId}`);
+                        console.log(`[overflow]   RAM free: ${data.resources.freeRamMB?.toFixed(0)}MB  CPU load: ${data.resources.cpuLoadPercent?.toFixed(1)}%`);
                         routerEvents.emit('resource_ad', data);
                         break;
                     }
                     case 'task_request': {
-                        console.log(`[edgent] Received task_request from ${msg.fromPeerId}`);
-                        
-                        // Verify stake is live onchain before doing any work
+                        console.log(`[overflow] Received task_request from ${msg.fromPeerId}`);
+
+                        // P1: verifyStake(data.jobId) call goes here once escrow is wired
+                        // For P0 — skip onchain verification, proceed directly to execution
+
                         try {
-                            const stake = await verifyStake(data.jobId);
-                            if (stake.released) {
-                                console.error(`[edgent] Stake already released for job ${data.jobId} — rejecting`);
-                                break;
-                            }
-                            console.log(`[edgent] Stake verified: ${stake.amount} USDC locked onchain`);
-                        } catch (err: any) {
-                            console.error(`[edgent] Stake not found for job ${data.jobId}:`, err.message);
-                            break;
-                        }
-                        
-                        try {
-                            const result = await runInference(data.task.model, data.task.prompt);
-                            if (!result) throw new Error("Inference failed");
-                            console.log(`[edgent] Inference complete (${result.durationMs}ms, ${result.tokensGenerated || 0} tokens)`);
-                            console.log(`[edgent] Generating ZK proof...`);
-                            
-                            const [pubX, pubY] = axlKeyToBigInts(topology.ourPublicKey);
-                            const zkProof = await generateZKProof(result.output, pubX, pubY);
-                
-                            console.log(`[edgent] Sending task_result + proof...`);
+                            // Call sandbox instead of inference
+                            const result = await runSandboxedTask(
+                                data.task.objective,
+                                data.task.language || 'python',
+                                data.task.inputData
+                            );
+
+                            console.log(`[overflow] Sandbox execution complete (${result.durationMs}ms)`);
+
                             await client.send(msg.fromPeerId, {
                                 type: 'task_result',
                                 requestId: data.requestId,
                                 fromNodeId: topology.ourPublicKey,
                                 toNodeId: msg.fromPeerId,
                                 timestamp: Date.now(),
-                                result: {
-                                    output: result.output,
-                                    tokensGenerated: result.tokensGenerated || 0,
-                                    durationMs: result.durationMs
-                                },
-                                zkProof
+                                result
                             });
-
-                            // x402: send payment_request after delivering result
-                            await client.send(msg.fromPeerId, {
-                                type: 'payment_request',
-                                jobId: data.jobId,
-                                requestId: data.requestId,
-                                amount: ENV.PRICE_PER_JOB_USDC,
-                                currency: 'USDC',
-                                chain: 'base-sepolia',
-                                walletAddress: ENV.PROVIDER_WALLET_ADDRESS,
-                                outputCommitment: zkProof.publicSignals[0]
-                            });
-                            console.log(`[edgent] Sent x402 payment_request for job ${data.jobId}`);
+                            console.log(`[overflow] Sent task_result for request ${data.requestId}`);
 
                         } catch (err: any) {
-                            console.error(`[edgent] Task failed:`, err.message);
+                            console.error(`[overflow] Task failed:`, err.message);
                         }
                         break;
                     }
                     case 'task_result': {
-                        console.log(`[edgent] Received task_result from ${msg.fromPeerId}`);
-                        const isValid = await verifyZKProof(data.zkProof);
-                        console.log(`[edgent] Verifying ZK proof... ${isValid ? 'valid' : 'invalid'}`);
-                        
-                        if (isValid) {
-                            // Store output — will be resolved when payment_request arrives
-                            pendingOutputs.set(data.requestId, data.result.output);
-                            console.log(`[edgent] ZK proof valid. Awaiting x402 payment_request...`);
-                        } else {
-                            // Reject immediately on bad proof — no payment will follow
-                            if (pendingTasks.has(data.requestId)) {
-                                pendingTasks.get(data.requestId)!.reject(new Error('Invalid ZK proof'));
-                                pendingTasks.delete(data.requestId);
-                            }
+                        console.log(`[overflow] Received task_result from ${msg.fromPeerId}`);
+                        // ZK verify removed (Step 2 strip) — resolve immediately on receipt
+                        if (pendingTasks.has(data.requestId)) {
+                            pendingTasks.get(data.requestId)!.resolve(data.result);
+                            pendingTasks.delete(data.requestId);
                         }
-                        break;
-                    }
-                    case 'payment_request': {
-                        console.log(`[edgent] Received x402 payment_request from ${msg.fromPeerId}`);
-                        console.log(`[edgent] ${data.amount} ${data.currency} → ${data.walletAddress}`);
 
-                        try {
-                            const { executionId, txHash, txLink } = await notifyKeeperHub(
-                                data.jobId,
-                                data.outputCommitment
-                            );
-                            console.log(`[edgent] KeeperHub executionId: ${executionId}`);
-                            console.log(`[edgent] txHash: ${txHash}`);
-                            console.log(`[edgent] Explorer: ${txLink}`);
-
-                            // Send payment_confirmed back to provider
-                            await client.send(msg.fromPeerId, {
-                                type: 'payment_confirmed',
-                                requestId: data.requestId,
-                                jobId: data.jobId,
-                                fromNodeId: topology.ourPublicKey,
-                                toNodeId: msg.fromPeerId,
-                                executionId,
-                                txHash,
-                                txLink
-                            });
-
-                            // Resolve the pending /delegate promise with the stored output
-                            if (pendingTasks.has(data.requestId)) {
-                                const output = pendingOutputs.get(data.requestId) ?? '';
-                                pendingOutputs.delete(data.requestId);
-                                pendingTasks.get(data.requestId)!.resolve({ output, executionId, txHash });
-                                pendingTasks.delete(data.requestId);
-                            }
-
-                            // Requester side: record the completed job
-                            recentJobs.push({
-                                jobId: data.jobId,
-                                requestId: data.requestId,
-                                status: 'completed',
-                                durationMs: 0,
-                                txHash,
-                                txLink,
-                                timestamp: Date.now(),
-                            });
-                            if (recentJobs.length > 50) recentJobs.shift();
-                        } catch (err: any) {
-                            console.error(`[edgent] Payment failed:`, err.message);
-                            if (pendingTasks.has(data.requestId)) {
-                                pendingTasks.get(data.requestId)!.reject(err);
-                                pendingTasks.delete(data.requestId);
-                            }
-                        }
-                        break;
-                    }
-                    case 'payment_confirmed': {
-                        console.log(`[edgent] Payment confirmed for ${data.requestId} by ${msg.fromPeerId}`);
-                        // Provider side: record the completed job
+                        // Log the completed job
                         recentJobs.push({
-                            jobId: data.jobId ?? '',
+                            jobId: '',
                             requestId: data.requestId,
                             status: 'completed',
-                            durationMs: 0, // provider doesn't know requester-side duration
-                            txHash: data.txHash ?? '',
-                            txLink: data.txLink ?? '',
+                            durationMs: data.result?.durationMs || 0,
                             timestamp: Date.now(),
                         });
-                        if (recentJobs.length > 50) recentJobs.shift(); // keep bounded
+                        if (recentJobs.length > 50) recentJobs.shift();
                         break;
                     }
+                    // payment_request / payment_confirmed cases removed (Step 2 strip — KeeperHub/x402 cut)
                     default:
                         // Ignore unhandled types
                         break;
                 }
             }
         } catch (err) {
-            console.error('[edgent] Error polling messages:', err);
+            console.error('[overflow] Error polling messages:', err);
         }
     }, 500);
 
 
-
     //HTTP Server
     const app = express();
-    app.use(express.json()); //middleware
+    app.use(express.json());
 
     app.post('/delegate', async (req, res) => {
         try {
-            const { model, prompt, maxTokens } = req.body;
+            const { objective, language, inputData } = req.body;
             const availablePeers = await client.getPeers();
-            
-            console.log(`[edgent] Broadcasting resource_request to ${availablePeers.length} peer(s)...`);
+
+            console.log(`[overflow] Broadcasting resource_request to ${availablePeers.length} peer(s)...`);
             if (availablePeers.length === 0) {
                 res.status(503).json({ error: 'No peers available' });
                 return;
@@ -292,25 +191,23 @@ async function main() {
                     type: 'resource_request',
                     fromNodeId: topology.ourPublicKey,
                     timestamp: requestSentAt,
-                    task: { kind: 'llm_inference', model, promptLength: prompt.length }
+                    task: { kind: 'code_exec', objective, language, inputData }
                 });
             }
 
-            console.log(`[edgent] Waiting for resource_ad...`);
+            console.log(`[overflow] Waiting for resource_ad...`);
             const targetPeer = await new Promise<string>((resolve, reject) => {
                 const timeout = setTimeout(() => {
                     routerEvents.off('resource_ad', handler);
                     reject(new Error('Timeout waiting for resource_ad'));
-                }, 5000); // Wait up to 5 seconds for an ad
-                
+                }, 5000);
+
                 const handler = (adData: any) => {
                     if (adData.timestamp < requestSentAt) return; // stale, ignore
-                    
                     if (!availablePeers.includes(adData.nodeId)) {
-                        console.warn('[edgent] resource_ad from unknown peer, ignoring');
+                        console.warn('[overflow] resource_ad from unknown peer, ignoring');
                         return;
                     }
-                    
                     clearTimeout(timeout);
                     routerEvents.off('resource_ad', handler);
                     resolve(adData.nodeId);
@@ -319,11 +216,11 @@ async function main() {
             });
 
             const requestId = randomUUID();
-            const jobId = '0x' + randomUUID().replace(/-/g, '');
+            const jobId = '0x' + randomUUID().replace(/-/g, '') + randomUUID().replace(/-/g, ''); // 64 hex chars = 32 bytes
 
-            // Stake USDC in escrow before sending task_request
-            await stakeForJob(jobId, targetPeer, ENV.PRICE_PER_JOB_USDC || '0.01');
-            console.log(`[edgent] Stake confirmed for job ${jobId}`);
+            // P1: stakeForJob(jobId, targetPeer, ENV.PRICE_PER_JOB_USDC) goes here
+            // Kept commented out — escrow wiring is P1, not P0
+            // await stakeForJob(jobId, targetPeer, ENV.PRICE_PER_JOB_USDC || '0.01');
 
             const resultPromise = new Promise((resolve, reject) => {
                 pendingTasks.set(requestId, { resolve, reject });
@@ -344,9 +241,10 @@ async function main() {
                 toNodeId: targetPeer,
                 jobId,
                 timestamp: Date.now(),
-                task: { model, prompt, maxTokens }
+                task: { kind: 'code_exec', objective, language, inputData }
             });
 
+            console.log(`[overflow] task_request sent to ${targetPeer} for job ${jobId}`);
             const result = await resultPromise;
             res.json(result);
         } catch (err: any) {
@@ -380,15 +278,15 @@ async function main() {
     });
 
     const server = app.listen(daemonPort, () => {
-        console.log(`[edgent] HTTP status server running on port ${daemonPort}`);
+        console.log(`[overflow] HTTP daemon running on port ${daemonPort}`);
     });
 
     //shutdown handling
     const shutdown = () => {
-        console.log('\n[edgent] Shutting down cleanly...');
+        console.log('\n[overflow] Shutting down cleanly...');
         clearInterval(pollInterval);
         server.close();
-        cleanupAXL(); // kill the Go binary
+        cleanupAXL();
         process.exit(0);
     };
 

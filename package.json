@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/R-Abinav/edgent#readme",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0",
+    "@google/genai": "^2.16.0",
     "circomlib": "^2.0.5",
     "circomlibjs": "^0.1.7",
     "dotenv": "^17.4.2",

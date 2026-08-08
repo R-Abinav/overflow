@@ -32,6 +32,13 @@ export const ENV = {
   ESCROW_CONTRACT_ADDRESS: process.env.ESCROW_CONTRACT_ADDR || '',
   USDC_CONTRACT_ADDRESS: process.env.USDC_CONTRACT_ADDRESS || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
 
+  // LLM API keys
+  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+
+  // Sandbox config
+  SANDBOX_MAX_ATTEMPTS: parseInt(process.env.SANDBOX_MAX_ATTEMPTS || '3', 10),
+
   // KeeperHub
   KEEPERHUB_API_KEY: process.env.KEEPERHUB_API_KEY || '',
   KEEPERHUB_BASE_URL: process.env.KEEPERHUB_BASE_URL || '',

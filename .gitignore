@@ -79,6 +79,11 @@ package-lock.json
 *v8.log
 /lib/
 
+# Rough md files
+INSTRUCTIONS.md
+P2P.md
+SUPPORT.md
+
 # ZK trusted setup files (large, not needed at runtime)
 pot12_final.ptau
 pot12_0000.ptau

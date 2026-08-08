@@ -14,9 +14,17 @@ export async function runAgent() {
         console.log('[agent] Force delegating...');
     }
 
-    //extract prompt
-    const promptArg = args.find(a => a.startsWith('--prompt='));
-    const prompt = (promptArg ? promptArg.split('=')[1] : null) || "Hello there!";
+    //extract objective
+    const objectiveArg = args.find(a => a.startsWith('--objective='));
+    const objective = (objectiveArg ? objectiveArg.split('=')[1] : null) || "compute the 20th Fibonacci number";
+
+    //extract language
+    const languageArg = args.find(a => a.startsWith('--language='));
+    const language = (languageArg ? languageArg.split('=')[1] : null) || "python";
+
+    //extract inputData
+    const inputDataArg = args.find(a => a.startsWith('--inputData='));
+    const inputData = inputDataArg ? inputDataArg.split('=')[1] : undefined;
 
     //check local resources
     const resources = await getResources();
@@ -26,7 +34,7 @@ export async function runAgent() {
     //if not constrained and can run ollama inference - try locally
     if (!forceDelegate && !resources.isConstrained && resources.ollamaReachable) {
         //run the inference locally
-        const result = await runInference(OLLAMA_MODEL, prompt);
+        const result = await runInference(OLLAMA_MODEL, objective);
 
         //if success -> print result, return
         if (result) {
@@ -47,9 +55,9 @@ export async function runAgent() {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
-            model: OLLAMA_MODEL,
-            prompt,
-            maxTokens: OLLAMA_MAX_TOKENS
+            objective,
+            language,
+            inputData
         })
     });
 
