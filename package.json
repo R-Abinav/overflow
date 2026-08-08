@@ -1,7 +1,7 @@
 {
   "name": "edgent",
   "version": "1.0.0",
-  "description": "P2P compute delegation protocol for AI Agents (or Edge AI Agents)",
+  "description": "Peer-to-peer sandboxed code execution for AI agents, built on Edgent's P2P compute delegation mesh",
   "main": "index.js",
   "bin": {
     "overflow": "./bin/overflow.js"
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/R-Abinav/edgent.git"
+    "url": "git+https://github.com/R-Abinav/overflow.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/R-Abinav/edgent/issues"
+    "url": "https://github.com/R-Abinav/overflow/issues"
   },
-  "homepage": "https://github.com/R-Abinav/edgent#readme",
+  "homepage": "https://github.com/R-Abinav/overflow#readme",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.116.0",
     "@google/genai": "^2.16.0",

@@ -52,7 +52,7 @@ export async function generateCandidateCode(objective: string, inputData?: strin
     return extractCode(rawResponse);
 }
 
-const SANDBOX_TIMEOUT_MS = 20000; // 20s
+const SANDBOX_TIMEOUT_MS = ENV.SANDBOX_TIMEOUT_MS;
 
 // Exported so agent.ts's local-execution path (unconstrained requester) can
 // run generated code through the exact same executor the provider uses,

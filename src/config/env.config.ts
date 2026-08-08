@@ -38,6 +38,7 @@ export const ENV = {
 
   // Sandbox config
   SANDBOX_MAX_ATTEMPTS: parseInt(process.env.SANDBOX_MAX_ATTEMPTS || '3', 10),
+  SANDBOX_TIMEOUT_MS: parseInt(process.env.SANDBOX_TIMEOUT_MS || '20000', 10),
 
   // KeeperHub
   KEEPERHUB_API_KEY: process.env.KEEPERHUB_API_KEY || '',

@@ -15,16 +15,44 @@ Everything after the import commit was built during Push to Prod (Aug 8, 2026).
 ## Quick Start
 
 ```bash
-npm install
+git clone https://github.com/R-Abinav/overflow.git
+cd overflow
+./install.sh
+```
+
+`install.sh` installs Node dependencies, builds the AXL mesh binary from source (the committed `axl-bin/node` is a macOS build and won't run elsewhere), generates the 4 AXL identity keypairs (`private-a/b/c/d.pem` — see below for why there are 4), links the `overflow` CLI globally via `npm link`, and copies `.env.example` → `.env`. Verified against a genuinely clean `node:20-bookworm-slim` container, not just a dev machine with everything already cached — see `install.sh`'s comments for the two real gaps that testing caught (Debian's `apt` Go package is too old to parse AXL's `go.mod`; `@nomicfoundation/edr-*` now requires Node 22+).
+
+**Prerequisites** `install.sh` checks for and won't silently work around: Node.js 22+, Go 1.23+ (only needed to build the AXL binary — die()s with a clear message and a download link if missing, doesn't auto-install).
+
+**Then:**
+
+```bash
+# Edit .env — at minimum, set ANTHROPIC_API_KEY
 # Terminal 1 — provider node
-npx tsx src/index.ts --role=provider
+overflow --role=provider
 # Terminal 2 — requester node
-npx tsx src/index.ts --role=requester
+overflow --role=requester
 # Terminal 3 — agent (triggers delegation)
 npx tsx src/core/agent.ts --force-delegate --objective="your task here"
 ```
 
-Set `FREE_RAM_THRESHOLD_MB=999999` in `.env` on the requester to reliably trigger the real `isConstrained` detection path on any hardware.
+Set `FREE_RAM_THRESHOLD_MB=999999` in `.env` on the requester to reliably trigger the real `isConstrained` detection path on any hardware, or `FORCE_CONSTRAINED=true`/`false` to override the check entirely (used by the multi-agent Docker Compose topology — see `docker-compose.yml`).
+
+### Why 4 keypairs?
+
+AXL routes messages by public key, so every node needs its own identity — two nodes sharing one key would be indistinguishable to a peer. `private-a.pem` backs the provider (`node-config-a.json`); `private-b/c/d.pem` back up to 3 concurrent requester identities (`node-config-b/c/d.json`), matching the 3-requester + 1-provider Docker Compose topology. For plain local two-terminal use (one provider, one requester) you only need `private-a.pem` and `private-b.pem`, but `install.sh` generates all 4 unconditionally since they're needed the moment you run `docker compose up`. These are gitignored — real key material, generated fresh per install, never committed.
+
+### Required `.env` vars
+
+| Var | Required | Purpose |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Yes | Claude is primary as of Phase 5 — the sandbox's code generation/self-correction and the RCA reference client's diagnosis/patch calls all go through this. |
+| `GEMINI_API_KEY` | No | Legacy dev-time fallback only (`llm.ts` checks Anthropic first); leave unset. |
+| `SANDBOX_MAX_ATTEMPTS` | No (defaults to 3) | Max code-generation/self-correction attempts per task. |
+| `SANDBOX_TIMEOUT_MS` | No (defaults to 20000) | Per-attempt execution timeout for generated code. |
+| `GITHUB_TOKEN` / `GITHUB_REPO` | Only for `examples/rca-agent.ts` | PAT (repo scope) and `owner/repo` for the demo repo the RCA client opens real PRs against. Not needed for the core daemon. |
+
+See `.env.example` for the full list, including P1-only vars (escrow/ENS/KeeperHub) that are unused in the live P0 message flow.
 
 ---
 
