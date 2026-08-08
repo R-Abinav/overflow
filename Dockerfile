@@ -24,6 +24,7 @@ RUN npm install
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY dashboard/ ./dashboard/
+COPY examples/ ./examples/
 COPY private-a.pem private-b.pem private-c.pem private-d.pem .env* ./
 COPY node-config-a.json node-config-b.json node-config-c.json node-config-d.json ./
 

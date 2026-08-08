@@ -17,26 +17,27 @@ function buildLocalError(
     }
 }
 
-export async function runAgent() {
-    const args = process.argv.slice(2);
+export interface DelegationFlowParams {
+    objective: string;
+    language?: string;
+    inputData?: string | undefined;
+    forceDelegate?: boolean;
+}
 
-    //if force delegation present - skip local inference!
-    const forceDelegate = args.includes('--force-delegate');
-    if (forceDelegate) {
-        console.log('[agent] Force delegating...');
-    }
+export interface DelegationFlowResult {
+    ranLocally: boolean;
+    output: string;
+    raw?: any; // full /delegate JSON response, present only when delegated
+}
 
-    //extract objective
-    const objectiveArg = args.find(a => a.startsWith('--objective='));
-    const objective = (objectiveArg ? objectiveArg.split('=')[1] : null) || "compute the 20th Fibonacci number";
-
-    //extract language
-    const languageArg = args.find(a => a.startsWith('--language='));
-    const language = (languageArg ? languageArg.split('=')[1] : null) || "python";
-
-    //extract inputData
-    const inputDataArg = args.find(a => a.startsWith('--inputData='));
-    const inputData = inputDataArg ? inputDataArg.split('=')[1] : undefined;
+// The core requester flow: check constraint -> try local generation+execution
+// if unconstrained -> otherwise generate candidate code and delegate over AXL.
+// Shared by the CLI (below) and any other reference client (e.g. examples/rca-agent.ts)
+// so there is exactly one implementation of this decision path, not two.
+export async function runDelegationFlow(params: DelegationFlowParams): Promise<DelegationFlowResult> {
+    const { objective, inputData } = params;
+    const language = params.language || "python";
+    const forceDelegate = params.forceDelegate ?? false;
 
     //check local resources
     const resources = await getResources();
@@ -53,12 +54,12 @@ export async function runAgent() {
         try {
             const localCode = await generateCandidateCode(objective, inputData);
             console.log('[agent] Generated code, executing locally...');
-            const { stdout, stderr, exitCode } = await runScript(localCode);
+            const { stdout, stderr, exitCode } = await runScript(localCode, inputData);
 
             if (exitCode === 0) {
                 console.log('[agent] Completed locally');
                 console.log('[agent] Output:', stdout);
-                return; // ← early return, done
+                return { ranLocally: true, output: stdout };
             }
 
             //if fail -> fall through to delegate
@@ -105,6 +106,33 @@ export async function runAgent() {
 
     const data = await delegate_response.json();
     console.log('[agent] Delegated result:', data);
+    return { ranLocally: false, output: data?.finalOutput ?? JSON.stringify(data), raw: data };
 }
 
-runAgent().catch(console.error);
+// ── CLI entrypoint — unchanged behavior from before the refactor ──────────────
+
+async function runAgentCli() {
+    const args = process.argv.slice(2);
+
+    const forceDelegate = args.includes('--force-delegate');
+    if (forceDelegate) {
+        console.log('[agent] Force delegating...');
+    }
+
+    const objectiveArg = args.find(a => a.startsWith('--objective='));
+    const objective = (objectiveArg ? objectiveArg.split('=')[1] : null) || "compute the 20th Fibonacci number";
+
+    const languageArg = args.find(a => a.startsWith('--language='));
+    const language = (languageArg ? languageArg.split('=')[1] : null) || "python";
+
+    const inputDataArg = args.find(a => a.startsWith('--inputData='));
+    const inputData = inputDataArg ? inputDataArg.split('=')[1] : undefined;
+
+    await runDelegationFlow({ objective, language, inputData, forceDelegate });
+}
+
+// Only auto-run when executed directly (e.g. `npx tsx src/core/agent.ts`),
+// not when imported as a module by another reference client.
+if (require.main === module) {
+    runAgentCli().catch(console.error);
+}

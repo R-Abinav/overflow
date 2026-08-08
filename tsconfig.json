@@ -2,7 +2,11 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    // rootDir is "." rather than "./src" so examples/ (which imports from
+    // src/) type-checks under the same project — there's no actual `tsc`
+    // build step in this repo (execution is always via tsx), so this only
+    // affects `tsc --noEmit` checks, not runtime.
+    "rootDir": ".",
     "outDir": "./dist",
 
     // Environment Settings

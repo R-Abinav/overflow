@@ -3,6 +3,7 @@ import { spawnAXL, AXLClient } from './core/axl';
 import { getResources } from './core/resources';
 import express from 'express';
 import path from 'path';
+import * as os from 'os';
 
 import { randomUUID } from 'crypto';
 import { EventEmitter } from 'events';
@@ -135,13 +136,16 @@ async function main() {
 
                             console.log(`[overflow] Sandbox execution complete (${result.durationMs}ms)`);
 
+                            // os.hostname() is the container name in Docker Compose (no
+                            // separate mapping needed) — lets a caller of /delegate know
+                            // which real peer's sandbox actually ran the code, not guessed.
                             await client.send(msg.fromPeerId, {
                                 type: 'task_result',
                                 requestId: data.requestId,
                                 fromNodeId: topology.ourPublicKey,
                                 toNodeId: msg.fromPeerId,
                                 timestamp: Date.now(),
-                                result
+                                result: { ...result, containerName: os.hostname() }
                             });
                             console.log(`[overflow] Sent task_result for request ${data.requestId}`);
 
