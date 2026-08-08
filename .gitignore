@@ -94,3 +94,7 @@ pot12_0001.ptau
 
 # ZK intermediate zkey (only final is needed)
 circuits/build/compute_proof_0000.zkey
+
+# RCA reference client's generated output — a fresh patch is written by
+# examples/rca-agent.ts on every run, not a static fixture like the log
+examples/rca-demo/patch.diff
