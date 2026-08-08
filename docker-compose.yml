@@ -1,0 +1,26 @@
+services:
+  overflow-provider:
+    build: .
+    container_name: overflow-provider
+    ports:
+      - "3001:3001"
+      - "9002:9002"
+    command: ["npx", "tsx", "src/index.ts", "--role=provider"]
+    networks:
+      - overflow-net
+
+  overflow-requester:
+    build: .
+    container_name: overflow-requester
+    ports:
+      - "3002:3002"
+      - "9012:9012"
+    command: ["npx", "tsx", "src/index.ts", "--role=requester"]
+    networks:
+      - overflow-net
+    depends_on:
+      - overflow-provider
+
+networks:
+  overflow-net:
+    driver: bridge
