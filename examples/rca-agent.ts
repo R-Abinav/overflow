@@ -19,7 +19,8 @@ Analyze the log and write a Python script that:
    - TRIGGER: what started the incident (cite actual counts/usernames/IPs from the log, not generic language)
    - CASCADE: how the trigger led to the resource exhaustion and the crash (cite actual timestamps and error messages)
    - ROOT CAUSE: one sentence, specific to this incident
-Do not fabricate evidence that is not in the log. Use only the Python standard library.`;
+Do not fabricate evidence that is not in the log. Use only the Python standard library.
+When extracting a field like a timestamp from a matching line, parse it robustly: do not assume a fixed number of spaces or exact field ordering across the whole line in a single rigid regex. Prefer checking for a stable substring/key and then deriving the value separately (e.g. the line's leading token) over one regex that must match the entire line's layout at once.`;
 
 async function main() {
     console.log('[rca-agent] Reading log fixture...');
