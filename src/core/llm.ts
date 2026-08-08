@@ -8,10 +8,34 @@ export interface ChatMessage {
 }
 
 export async function askLLM(systemPrompt: string, messages: ChatMessage[]): Promise<string> {
-    if (ENV.GEMINI_API_KEY) {
+    if (ENV.ANTHROPIC_API_KEY) {
+        console.log('[llm] Using Anthropic API');
+        const anthropic = new Anthropic({ apiKey: ENV.ANTHROPIC_API_KEY });
+
+        const response = await anthropic.messages.create({
+            model: 'claude-sonnet-5',
+            max_tokens: 4096,
+            system: systemPrompt,
+            messages: messages.map(m => ({
+                role: m.role,
+                content: m.content
+            }))
+        });
+
+        // Claude 5 can return a leading `thinking` content block before the
+        // actual `text` block (observed: present for some objectives, absent
+        // for others — not predictable from the prompt alone), so the text
+        // response is not reliably content[0]. Find the text block by type
+        // instead of assuming its position.
+        const textBlock = response.content.find((block): block is Extract<typeof block, { type: 'text' }> => block.type === 'text');
+        if (!textBlock) {
+            throw new Error('No text block in Anthropic response (content types: ' + response.content.map(b => b.type).join(', ') + ')');
+        }
+        return textBlock.text;
+    } else if (ENV.GEMINI_API_KEY) {
         console.log('[llm] Using Gemini API');
         const ai = new GoogleGenAI({ apiKey: ENV.GEMINI_API_KEY });
-        
+
         let combinedSystemPrompt = systemPrompt;
         const geminiMessages = messages.map(m => {
             if (m.role === 'user') {
@@ -29,31 +53,12 @@ export async function askLLM(systemPrompt: string, messages: ChatMessage[]): Pro
                 temperature: 0,
             }
         });
-        
+
         if (!response.text) {
              throw new Error('Empty response from Gemini');
         }
         return response.text;
-    } else if (ENV.ANTHROPIC_API_KEY) {
-        console.log('[llm] Using Anthropic API');
-        const anthropic = new Anthropic({ apiKey: ENV.ANTHROPIC_API_KEY });
-        
-        const response = await anthropic.messages.create({
-            model: 'claude-3-5-sonnet-20241022',
-            max_tokens: 4096,
-            system: systemPrompt,
-            messages: messages.map(m => ({
-                role: m.role,
-                content: m.content
-            }))
-        });
-
-        const content = response.content[0];
-        if (content.type !== 'text') {
-            throw new Error('Expected text response from Anthropic');
-        }
-        return content.text;
     } else {
-        throw new Error('No LLM API key provided. Set GEMINI_API_KEY or ANTHROPIC_API_KEY');
+        throw new Error('No LLM API key provided. Set ANTHROPIC_API_KEY or GEMINI_API_KEY');
     }
 }
