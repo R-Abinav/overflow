@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "P2P compute delegation protocol for AI Agents (or Edge AI Agents)",
   "main": "index.js",
+  "bin": {
+    "overflow": "./bin/overflow.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
