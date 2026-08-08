@@ -57,20 +57,34 @@ const SANDBOX_TIMEOUT_MS = 20000; // 20s
 // Exported so agent.ts's local-execution path (unconstrained requester) can
 // run generated code through the exact same executor the provider uses,
 // instead of a separate mechanism.
-export async function runScript(code: string): Promise<{ stdout: string; stderr: string; exitCode: number }> {
+//
+// inputData, if provided, is piped to the script's stdin. Some objectives'
+// input is large enough (e.g. a multi-hundred-line log) that a model
+// reasonably chooses to read it via sys.stdin.read() instead of embedding it
+// as a literal string in the generated code — execFile's callback-based form
+// doesn't take an `input` option (that's only on execFileSync), so this
+// writes to the child's stdin stream directly. stdin is always explicitly
+// closed, with or without inputData, so a script that calls sys.stdin.read()
+// with nothing to give it gets an immediate EOF (empty read) instead of
+// hanging until SANDBOX_TIMEOUT_MS kills it.
+export async function runScript(code: string, inputData?: string): Promise<{ stdout: string; stderr: string; exitCode: number }> {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'overflow-'));
     const scriptPath = path.join(tempDir, 'script.py');
     fs.writeFileSync(scriptPath, code);
 
     try {
         return await new Promise<{ stdout: string; stderr: string; exitCode: number }>((resolve) => {
-            execFile('python3', [scriptPath], { timeout: SANDBOX_TIMEOUT_MS, cwd: tempDir }, (error, stdout, stderr) => {
+            const child = execFile('python3', [scriptPath], { timeout: SANDBOX_TIMEOUT_MS, cwd: tempDir }, (error, stdout, stderr) => {
                 resolve({
                     stdout: stdout.toString(),
                     stderr: stderr.toString(),
                     exitCode: error ? (error as any).code || 1 : 0
                 });
             });
+            if (inputData) {
+                child.stdin?.write(inputData);
+            }
+            child.stdin?.end();
         });
     } catch (execErr: any) {
         return { stdout: '', stderr: execErr.message || 'Unknown execution error', exitCode: 1 };
@@ -149,7 +163,7 @@ export async function runSandboxedTask(
         console.log(`\n[sandbox] --- Executing Python Code ---`);
         console.log(attemptCode);
         console.log(`[sandbox] -----------------------------\n`);
-        const { stdout, stderr, exitCode } = await runScript(attemptCode);
+        const { stdout, stderr, exitCode } = await runScript(attemptCode, inputData);
 
         attempts.push({ attemptNumber: attemptNum, source, code: attemptCode, stdout, stderr, exitCode });
 
