@@ -21,7 +21,10 @@ async function main() {
 
     //pick the right AXL config file and port based on role
     //using node-config-a (port 9002) for provider, node-config-b (port 9012) for requester
-    const configPath = role === 'provider' ? './node-config-a.json' : './node-config-b.json';
+    //AXL_CONFIG_PATH, if explicitly set, overrides the role-based default — lets
+    //multiple requester instances (each needing a distinct AXL identity/keypair)
+    //share the same image while pointing at their own node-config-*.json.
+    const configPath = process.env.AXL_CONFIG_PATH || (role === 'provider' ? './node-config-a.json' : './node-config-b.json');
     const apiPort = role === 'provider' ? 9002 : 9012;
 
     //using 3001 for provider, 3002 for requester to avoid port conflicts during local testing

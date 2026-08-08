@@ -1,0 +1,9 @@
+{
+  "PrivateKeyPath": "private-d.pem",
+  "Peers": [
+    "tls://overflow-provider:9001"
+  ],
+  "Listen": [],
+  "api_port": 9012,
+  "tcp_port": 7000
+}

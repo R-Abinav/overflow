@@ -45,7 +45,16 @@ export async function getResources(): Promise<ResourceStatus> {
     // Determine if the node is constrained based on the provided thresholds.
     // For the demo, set FREE_RAM_THRESHOLD_MB=999999 in .env to reliably trigger
     // the real detection path on any hardware without bypassing the check.
-    const isConstrained = freeRamMB < ENV.FREE_RAM_THRESHOLD_MB || cpuLoadPercent > ENV.FREE_CPU_THRESHOLD_PERCENT;
+    //
+    // FORCE_CONSTRAINED, if explicitly set to 'true'/'false', overrides the real
+    // computed value entirely — used by the multi-agent compose topology to give
+    // each requester container a deterministic, demo-controlled resource state
+    // instead of depending on actual host load. Unset (the default) leaves this
+    // exactly as before — real threshold-based detection, no override.
+    const forceConstrained = process.env.FORCE_CONSTRAINED;
+    const isConstrained = forceConstrained === 'true' ? true
+        : forceConstrained === 'false' ? false
+        : freeRamMB < ENV.FREE_RAM_THRESHOLD_MB || cpuLoadPercent > ENV.FREE_CPU_THRESHOLD_PERCENT;
 
     return {
         cpuLoadPercent,

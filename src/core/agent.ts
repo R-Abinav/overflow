@@ -52,8 +52,15 @@ export async function runAgent() {
 
     let localError: string | undefined;
 
+    // Explicit FORCE_CONSTRAINED=false means "treat this node as unconstrained
+    // for this demo/topology run" — bypass the real ollamaReachable check too,
+    // since runInference() is a fully mocked stub that doesn't actually call
+    // Ollama, and these containers don't have Ollama installed. Default
+    // (unset) behavior is unchanged: still requires a real reachable Ollama.
+    const forcedUnconstrained = process.env.FORCE_CONSTRAINED === 'false';
+
     //if not constrained and can run ollama inference - try locally
-    if (!forceDelegate && !resources.isConstrained && resources.ollamaReachable) {
+    if (!forceDelegate && !resources.isConstrained && (resources.ollamaReachable || forcedUnconstrained)) {
         //run the inference locally
         const result = await runInference(OLLAMA_MODEL, objective);
 

@@ -24,8 +24,8 @@ RUN npm install
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY dashboard/ ./dashboard/
-COPY private-a.pem private-b.pem .env* ./
-COPY node-config-a.json node-config-b.json ./
+COPY private-a.pem private-b.pem private-c.pem private-d.pem .env* ./
+COPY node-config-a.json node-config-b.json node-config-c.json node-config-d.json ./
 
 # Entrypoint
 CMD ["npx", "tsx", "src/index.ts"]

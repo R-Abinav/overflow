@@ -9,13 +9,51 @@ services:
     networks:
       - overflow-net
 
-  overflow-requester:
+  # 3 requester identities, each with its own AXL keypair (node-config-b/c/d.json)
+  # so the provider can address them individually — AXL routes by public key,
+  # so reusing one identity across containers would make them indistinguishable.
+  # FORCE_CONSTRAINED deterministically sets each one's resource state for the
+  # demo instead of depending on actual container load.
+  overflow-requester-1:
     build: .
-    container_name: overflow-requester
+    container_name: overflow-requester-1
     ports:
       - "3002:3002"
       - "9012:9012"
     command: ["npx", "tsx", "src/index.ts", "--role=requester"]
+    environment:
+      - AXL_CONFIG_PATH=./node-config-b.json
+      - FORCE_CONSTRAINED=true
+    networks:
+      - overflow-net
+    depends_on:
+      - overflow-provider
+
+  overflow-requester-2:
+    build: .
+    container_name: overflow-requester-2
+    ports:
+      - "3003:3002"
+      - "9013:9012"
+    command: ["npx", "tsx", "src/index.ts", "--role=requester"]
+    environment:
+      - AXL_CONFIG_PATH=./node-config-c.json
+      - FORCE_CONSTRAINED=false
+    networks:
+      - overflow-net
+    depends_on:
+      - overflow-provider
+
+  overflow-requester-3:
+    build: .
+    container_name: overflow-requester-3
+    ports:
+      - "3004:3002"
+      - "9014:9012"
+    command: ["npx", "tsx", "src/index.ts", "--role=requester"]
+    environment:
+      - AXL_CONFIG_PATH=./node-config-d.json
+      - FORCE_CONSTRAINED=true
     networks:
       - overflow-net
     depends_on:

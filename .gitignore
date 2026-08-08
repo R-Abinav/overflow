@@ -10,6 +10,8 @@ LLM_Context.md
 #pkeys
 private-a.pem
 private-b.pem
+private-c.pem
+private-d.pem
 
 #typescript
 node_modules/
