@@ -114,12 +114,20 @@ async function main() {
                         // P1: verifyStake(data.jobId) call goes here once escrow is wired
                         // For P0 — skip onchain verification, proceed directly to execution
 
+                        if (data.task.localError) {
+                            console.log(`[overflow] Requester reported local failure: ${data.task.localError}`);
+                        }
+
                         try {
-                            // Call sandbox instead of inference
+                            // Call sandbox instead of inference.
+                            // data.task.code, if present, is the requester's own
+                            // already-generated code — runSandboxedTask tries it
+                            // directly before falling back to self-correction.
                             const result = await runSandboxedTask(
                                 data.task.objective,
                                 data.task.language || 'python',
-                                data.task.inputData
+                                data.task.inputData,
+                                data.task.code
                             );
 
                             console.log(`[overflow] Sandbox execution complete (${result.durationMs}ms)`);
@@ -176,7 +184,12 @@ async function main() {
 
     app.post('/delegate', async (req, res) => {
         try {
-            const { objective, language, inputData } = req.body;
+            // code: the requester's own already-generated code, if it has any
+            //   (couldn't run it locally — resource constraint, force-delegate,
+            //   or no local model available). Optional.
+            // localError: what happened locally, e.g. an OOM/constraint message.
+            //   Logging/demo narration only — never used in execution logic.
+            const { objective, language, inputData, code, localError } = req.body;
             const availablePeers = await client.getPeers();
 
             console.log(`[overflow] Broadcasting resource_request to ${availablePeers.length} peer(s)...`);
@@ -191,7 +204,7 @@ async function main() {
                     type: 'resource_request',
                     fromNodeId: topology.ourPublicKey,
                     timestamp: requestSentAt,
-                    task: { kind: 'code_exec', objective, language, inputData }
+                    task: { kind: 'code_exec', objective, language, inputData, code, localError }
                 });
             }
 
@@ -241,7 +254,7 @@ async function main() {
                 toNodeId: targetPeer,
                 jobId,
                 timestamp: Date.now(),
-                task: { kind: 'code_exec', objective, language, inputData }
+                task: { kind: 'code_exec', objective, language, inputData, code, localError }
             });
 
             console.log(`[overflow] task_request sent to ${targetPeer} for job ${jobId}`);

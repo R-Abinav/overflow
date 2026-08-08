@@ -1,9 +1,28 @@
-import { getResources } from "./resources";
+import { getResources, ResourceStatus } from "./resources";
 import { runInference } from "./executor";
+import { generateCandidateCode } from "./sandbox";
+import { ENV } from "../config/env.config";
 
-//global vars (Can change later) - can push to env vars later 
+//global vars (Can change later) - can push to env vars later
 const OLLAMA_MODEL = "tinyllama";
 const OLLAMA_MAX_TOKENS = 500;
+
+// localError is logging/demo narration only — never fed into execution logic.
+function buildLocalError(
+    reason: 'force-delegate' | 'constrained' | 'no-ollama' | 'local-inference-failed',
+    resources: ResourceStatus
+): string {
+    switch (reason) {
+        case 'force-delegate':
+            return 'force-delegate flag set — local execution skipped intentionally';
+        case 'constrained':
+            return `local resource constraint: ${resources.freeRamMB.toFixed(0)}MB free RAM (threshold ${ENV.FREE_RAM_THRESHOLD_MB}MB), ${resources.cpuLoadPercent.toFixed(1)}% CPU load (threshold ${ENV.FREE_CPU_THRESHOLD_PERCENT}%)`;
+        case 'no-ollama':
+            return 'local ollama endpoint unreachable — no local model available';
+        case 'local-inference-failed':
+            return 'local inference attempt failed';
+    }
+}
 
 export async function runAgent() {
     const args = process.argv.slice(2);
@@ -31,6 +50,8 @@ export async function runAgent() {
 
     const delegateUrl = `http://localhost:3002/delegate`;
 
+    let localError: string | undefined;
+
     //if not constrained and can run ollama inference - try locally
     if (!forceDelegate && !resources.isConstrained && resources.ollamaReachable) {
         //run the inference locally
@@ -46,6 +67,26 @@ export async function runAgent() {
 
         //if fail -> fall through to delegate
         console.log('[agent] Local inference failed, delegating...');
+        localError = buildLocalError('local-inference-failed', resources);
+    } else if (forceDelegate) {
+        localError = buildLocalError('force-delegate', resources);
+    } else if (resources.isConstrained) {
+        localError = buildLocalError('constrained', resources);
+    } else if (!resources.ollamaReachable) {
+        localError = buildLocalError('no-ollama', resources);
+    }
+
+    // Generate the code we would have run, so the provider can try it directly
+    // instead of re-solving the task blind. Generation is a cheap network call,
+    // not the constrained resource — only *execution* was the problem — so it's
+    // fine to do here even though we can't run the result locally.
+    let code: string | undefined;
+    try {
+        console.log('[agent] Generating candidate code locally (will not execute it here)...');
+        code = await generateCandidateCode(objective, inputData);
+        console.log('[agent] Candidate code generated, sending it along with delegation.');
+    } catch (e: any) {
+        console.warn('[agent] Local code generation failed, delegating with objective only:', e.message);
     }
 
     //if no resources, no ollama, or local inference failed -> delegate
@@ -57,7 +98,9 @@ export async function runAgent() {
         body: JSON.stringify({
             objective,
             language,
-            inputData
+            inputData,
+            code,
+            localError
         })
     });
 
