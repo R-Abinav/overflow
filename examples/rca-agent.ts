@@ -20,7 +20,8 @@ Analyze the log and write a Python script that:
    - CASCADE: how the trigger led to the resource exhaustion and the crash (cite actual timestamps and error messages)
    - ROOT CAUSE: one sentence, specific to this incident
 Do not fabricate evidence that is not in the log. Use only the Python standard library.
-When extracting a field like a timestamp from a matching line, parse it robustly: do not assume a fixed number of spaces or exact field ordering across the whole line in a single rigid regex. Prefer checking for a stable substring/key and then deriving the value separately (e.g. the line's leading token) over one regex that must match the entire line's layout at once.`;
+When extracting a field like a timestamp from a matching line, parse it robustly: do not assume a fixed number of spaces or exact field ordering across the whole line in a single rigid regex. Prefer checking for a stable substring/key and then deriving the value separately (e.g. the line's leading token) over one regex that must match the entire line's layout at once.
+Every count or specific number cited anywhere in the printed analysis (TRIGGER, CASCADE, ROOT CAUSE, or any other summary line) must be produced by printing the actual computed variable (e.g. an f-string referencing the real dict/counter/list you built while parsing) — never hand-written as a literal number in the summary text. If you are not counting something with code, do not state a count for it.`;
 
 async function main() {
     console.log('[rca-agent] Reading log fixture...');
